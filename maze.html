@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #maze-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            border: 2px solid #000;
+        }
+        #player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #00f;
+        }
+    </style>
+</head>
+<body>
+    <div id="maze-container">
+        <div id="player"></div>
+    </div>
+
+    <script>
+        const mazeContainer = document.getElementById("maze-container");
+        const player = document.getElementById("player");
+
+        // Define the maze structure (1 for walls, 0 for open path)
+        const maze = [
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 0, 1, 1, 0, 1],
+            [1, 0, 0, 0, 1, 1, 0, 1],
+            [1, 0, 1, 1, 0, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 0, 1],
+            [1, 1, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+        ];
+
+        // Set the initial position of the player
+        let playerX = 40;
+        let playerY = 40;
+
+        // Draw the maze
+        function drawMaze() {
+            mazeContainer.innerHTML = ""; // Clear the maze
+            for (let i = 0; i < maze.length; i++) {
+                for (let j = 0; j < maze[i].length; j++) {
+                    if (maze[i][j] === 1) {
+                        const wall = document.createElement("div");
+                        wall.classList.add("wall");
+                        wall.style.top = i * 40 + "px";
+                        wall.style.left = j * 40 + "px";
+                        mazeContainer.appendChild(wall);
+                    }
+                }
+            }
+        }
+
+        // Draw the player's position
+        function drawPlayer() {
+            player.style.top = playerY + "px";
+            player.style.left = playerX + "px";
+        }
+
+        // Check if the player has reached the goal
+        function checkWin() {
+            if (playerX === 360 && playerY === 360) {
+                alert("You won!");
+            }
+        }
+
+        // Move the player
+        document.addEventListener("keydown", function (event) {
+            const key = event.key;
+            let newX = playerX;
+            let newY = playerY;
+
+            if (key === "ArrowUp") {
+                newY -= 40;
+            } else if (key === "ArrowDown") {
+                newY += 40;
+            } else if (key === "ArrowLeft") {
+                newX -= 40;
+            } else if (key === "ArrowRight") {
+                newX += 40;
+            }
+
+            // Check if the new position is valid (not a wall)
+            if (maze[Math.floor(newY / 40)][Math.floor(newX / 40)] !== 1) {
+                playerX = newX;
+                playerY = newY;
+                drawPlayer();
+                checkWin();
+            }
+        });
+
+        // Initialize the game
+        drawMaze();
+        drawPlayer();
+    </script>
+</body>
+</html>
