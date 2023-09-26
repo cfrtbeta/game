@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Can-Can Dance</title>
+    <style>
+        canvas {
+            background-color: #f0f0f0;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="danceCanvas" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("danceCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const dancer = {
+            x: 200,
+            y: 200,
+            leg1Length: 50,
+            leg2Length: 50,
+            legAngle: Math.PI / 4,
+            dancing: false,
+        };
+
+        function drawDancer() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw dancer's legs
+            ctx.beginPath();
+            ctx.moveTo(dancer.x, dancer.y);
+            ctx.lineTo(
+                dancer.x + Math.cos(dancer.legAngle) * dancer.leg1Length,
+                dancer.y + Math.sin(dancer.legAngle) * dancer.leg1Length
+            );
+            ctx.moveTo(dancer.x, dancer.y);
+            ctx.lineTo(
+                dancer.x + Math.cos(-dancer.legAngle) * dancer.leg2Length,
+                dancer.y + Math.sin(-dancer.legAngle) * dancer.leg2Length
+            );
+            ctx.stroke();
+
+            // Draw dancer's body
+            ctx.beginPath();
+            ctx.arc(dancer.x, dancer.y - 60, 20, 0, Math.PI * 2);
+            ctx.fillStyle = "#ff0000";
+            ctx.fill();
+        }
+
+        function dance() {
+            dancer.legAngle += 0.1;
+            drawDancer();
+            if (dancer.dancing) {
+                requestAnimationFrame(dance);
+            }
+        }
+
+        canvas.addEventListener("click", () => {
+            if (!dancer.dancing) {
+                dancer.dancing = true;
+                dance();
+            } else {
+                dancer.dancing = false;
+            }
+        });
+
+        drawDancer();
+    </script>
+</body>
+</html>
